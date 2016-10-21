@@ -13,7 +13,7 @@ describe Spree::Taxon do
       let!(:anothertaxon) { FactoryGirl.create :taxon , taxonomy: anothertaxonomy}      
 
       it "should return a taxon" do
-        found_taxon = Spree::Taxon.find_by_store_id_and_permalink!(store.id, taxon.permalink)
+        found_taxon = Spree::Taxon.find_by_permalink!(taxon.permalink)
         found_taxon.should == taxon
         found_taxon.should_not == anothertaxon
       end        
@@ -22,7 +22,7 @@ describe Spree::Taxon do
     context "taxon does not exist in given store" do
       it "should raise active_record::not_found" do
         expect{
-          Spree::Taxon.find_by_store_id_and_permalink!(1, "non-existing-permalink")
+          Spree::Taxon.find_by_permalink!("non-existing-permalink")
         }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
