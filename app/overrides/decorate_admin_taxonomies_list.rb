@@ -10,5 +10,5 @@ Deface::Override.new(
   virtual_path: "spree/admin/taxonomies/_list",
   name: "multi_domain_admin_taxonomies_list_body",
   insert_before: "td.actions",
-  text: "<td><%= taxonomy.store.try(:name) %></td>",
+  text: "<td><%= taxonomy.try(:name) %></td>",
   disabled: false)
