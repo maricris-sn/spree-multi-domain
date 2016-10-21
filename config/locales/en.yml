@@ -16,6 +16,7 @@ en:
     default: Default
     store_name: Name
     store_code: Code
+    store_color: General Color
     promotion_rule_types:
       store:
         name: Store

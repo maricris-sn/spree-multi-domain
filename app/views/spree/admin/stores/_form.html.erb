@@ -18,6 +18,14 @@
         <% end %>
       </div>
 
+      <div data-hook="color">
+        <%= f.field_container :color, class: ['form-group'] do %>
+          <%= f.label :color, Spree.t(:store_color) %><br />
+          <%= f.text_field :color, class: 'form-control' %>
+          <%= error_message_on :store, :color %>
+        <% end %>
+      </div>
+
       <div data-hook="default" class="form-group">
         <strong><%= Spree.t(:default) %></strong>
 
