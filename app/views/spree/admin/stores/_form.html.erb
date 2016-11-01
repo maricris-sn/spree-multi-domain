@@ -60,8 +60,7 @@
 
     <div data-hook="admin_store_form_fields_right" class="col-md-6">
       <div data-hook="logo">
-        <%= image_tag f.object.logo.attachment.url(:small) %>
-        <%#= image_tag "/spree/stores/13/mini/Screen_Shot_2016-11-01_at_13.11.05.png?1477997183" %>
+        <%= image_tag @store.logo.attachment.url(:small) %>
         <%= f.fields_for :logo_attributes, class: ['form-group'] do |img| %>
           <%= img.label :attachment, Spree.t(:image) %><br />
           <%= img.file_field :attachment %>

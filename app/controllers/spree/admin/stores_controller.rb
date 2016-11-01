@@ -13,8 +13,15 @@ class Spree::Admin::StoresController < Spree::Admin::ResourceController
     end
   end
 
+  def new
+    @store.logo = Spree::StoreLogo.new(viewable: @store, attachment: File.open("#{Rails.root}/public/missing.png"))
+  end
+
   def edit
-    @store.logo = @store.logo.present? ? @store.logo : Spree::StoreLogo.new(viewable: @store)
+    if @store.logo.blank?
+      @store.logo = Spree::StoreLogo.new(viewable: @store, attachment: File.open("#{Rails.root}/public/missing.png"))
+      @store.save
+    end
   end
 
   private

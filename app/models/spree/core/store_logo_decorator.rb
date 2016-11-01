@@ -15,11 +15,6 @@ module Spree
     # we need to look at the write-queue for images which have not been saved yet
     before_save :find_dimensions, if: :attachment_updated_at_changed?
 
-    #used by admin products autocomplete
-    def mini_url
-      attachment.url(:mini, false)
-    end
-
     def find_dimensions
       temporary = attachment.queued_for_write[:original]
       filename = temporary.path unless temporary.nil?
