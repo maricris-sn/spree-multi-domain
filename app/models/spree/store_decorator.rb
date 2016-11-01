@@ -3,6 +3,7 @@ module Spree
     has_and_belongs_to_many :products, join_table: 'spree_products_stores'
     #has_many :taxonomies
     has_many :orders
+    has_many :users
 
     has_many :store_payment_methods
     has_many :payment_methods, through: :store_payment_methods
@@ -12,16 +13,8 @@ module Spree
 
     has_and_belongs_to_many :promotion_rules, class_name: 'Spree::Promotion::Rules::Store', join_table: 'spree_promotion_rules_stores', association_foreign_key: 'promotion_rule_id'
 
-    has_attached_file :logo,
-      styles: { mini: '48x48>', small: '100x100>', medium: '250x250>' },
-      default_style: :medium,
-      url: 'stores/:id/:style/:basename.:extension',
-      path: 'stores/:id/:style/:basename.:extension',
-      convert_options: { all: '-strip -auto-orient' }
+    has_one :logo, -> { order(:position) }, as: :viewable, dependent: :destroy, class_name: "Spree::StoreLogo"
 
-    if respond_to? :logo_file_name
-      validates_attachment_file_name :logo, matches: [/png\Z/i, /jpe?g\Z/i]
-    end
-
+    accepts_nested_attributes_for :logo
   end
 end

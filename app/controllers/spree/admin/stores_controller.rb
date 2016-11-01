@@ -13,6 +13,10 @@ class Spree::Admin::StoresController < Spree::Admin::ResourceController
     end
   end
 
+  def edit
+    @store.logo = @store.logo.present? ? @store.logo : Spree::StoreLogo.new(viewable: @store)
+  end
+
   private
     def load_payment_methods
       @payment_methods = Spree::PaymentMethod.all
