@@ -21,7 +21,7 @@
       <div data-hook="color">
         <%= f.field_container :color, class: ['form-group'] do %>
           <%= f.label :color, Spree.t(:store_color) %><br />
-          <%= f.text_field :color, class: 'form-control' %>
+          <%= f.text_field :color, class: 'form-control', as: :minicolors %>
           <%= error_message_on :store, :color %>
         <% end %>
       </div>
@@ -103,7 +103,18 @@
           <%= f.text_field :default_currency, class: 'form-control' %>
         <% end %>
       </div>
+
+      <div data-hook="taxons">
+        <%= f.fields_for :taxons, class: ['form-group'] do %>
+          <%= f.label :categories, "Categories" %>
+          <%= select_tag "store[taxon_ids][]", options_from_collection_for_select(Spree::Taxon.where(parent_id: 15), 'id', 'name', [f.object.taxons.map(&:id)]), { class: 'select2', multiple: true } %>
+        <% end %>
+      </div>
     </div>
 
   </div>
 </div>
+
+<script>
+$('#store_taxon_ids_').val(<%= f.object.taxons.map(&:id) %>).change();
+</script>
