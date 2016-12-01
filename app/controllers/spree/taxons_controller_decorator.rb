@@ -1,6 +1,6 @@
 Spree::TaxonsController.class_eval do
    def show
-    @taxon = Spree::Taxon.find_by_permalink!(params[:id])
+    @taxon = Spree::Taxon.find_by_permalink!(params[:id], current_store)
     return unless @taxon
 
     @searcher = build_searcher(params.merge(taxon: @taxon.id))
