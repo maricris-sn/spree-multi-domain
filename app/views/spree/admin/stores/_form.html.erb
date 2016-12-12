@@ -107,7 +107,15 @@
       <div data-hook="taxons">
         <%= f.fields_for :taxons, class: ['form-group'] do %>
           <%= f.label :categories, "Categories" %>
-          <%= select_tag "store[taxon_ids][]", options_from_collection_for_select(Spree::Taxon.where(parent_id: 15), 'id', 'name', [f.object.taxons.map(&:id)]), { class: 'select2', multiple: true } %>
+          <%= select_tag "store[taxon_ids][]", options_from_collection_for_select(Spree::Taxon.where(parent_id: 15), 'id', 'name', [f.object.categories.map(&:id)]), { class: 'select2', multiple: true } %>
+        <% end %>
+      </div>
+
+      <div data-hook="author_taxons">
+        <%= f.fields_for :taxons, class: ['form-group'] do %>
+          <%= f.label :authors, "authors" %>
+          <%= select_tag "store[taxon_ids][]", options_from_collection_for_select(f.object.authors, 'id', 'name', [f.object.authors.map(&:id)]), { class: 'select2 store_author_taxons', multiple: true } %>
+          <%= text_field_tag "store[taxon_ids][]", f.object.authors.map(&:id), class: "author_taxons" %>
         <% end %>
       </div>
     </div>
@@ -116,5 +124,47 @@
 </div>
 
 <script>
-$('#store_taxon_ids_').val(<%= f.object.taxons.map(&:id) %>).change();
+$(document).ready(function(){
+  $('#store_taxon_ids_').val(<%= f.object.categories.map(&:id) %>).change();
+  $('.store_author_taxons').val(<%= f.object.authors.map(&:id) %>).change();
+});
+
+  formatTaxon = function(taxon) {
+    return Select2.util.escapeMarkup(taxon.pretty_name);
+  };
+  if ($('.author_taxons').on() && $('.author_taxons').length > 0) {
+    $('.author_taxons').select2({
+      dropdownCssClass: "taxon_select_box",
+      placeholder: Spree.translations.find_a_taxon,
+      ajax: {
+        url: "/api/v1/taxons",
+        datatype: 'json',
+        data: function(term, page) {
+          return {
+            per_page: 50,
+            page: page,
+            without_children: true,
+            token: Spree.api_key,
+            q: {
+              name_cont: term
+            }
+          };
+        },
+        results: function(data, page) {
+          var more;
+          more = page < data.pages;
+          return {
+            results: data['taxons'],
+            more: more
+          };
+        }
+      },
+      formatResult: formatTaxon,
+      formatSelection: formatTaxon
+    }).on('change', function (evt) {
+      var author_ids = <%= f.object.authors.map(&:id) %>;
+      author_ids.push(parseInt($(this).val()));
+      $('.store_author_taxons').append($('<option>', { value: $(this).val(), text: $(this).select2('data').name, selected: true, style: "display: none;" })).trigger('change');
+    });
+  }
 </script>
