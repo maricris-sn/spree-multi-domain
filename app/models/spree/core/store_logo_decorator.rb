@@ -4,9 +4,20 @@ module Spree
 
     has_attached_file :attachment,
                       styles: { mini: '48x48>', small: '100x100>', large: '600x600>' },
-                      url: '/spree/stores/:id/:style/:basename.:extension',
-                      path: ':rails_root/public/spree/stores/:id/:style/:basename.:extension',
-                      convert_options: { all: '-strip -auto-orient -colorspace sRGB' }
+                      convert_options: { all: '-strip -auto-orient -colorspace sRGB' },
+                      s3_credentials: {
+                        access_key_id:     ENV['S3_ACCESS_KEY'],
+                        secret_access_key: ENV['S3_SECRET_KEY'],
+                        bucket:            ENV['S3_BUCKET']
+                      },
+                      storage:        :s3,
+                      s3_headers:     { "Cache-Control" => "max-age=31557600" },
+                      s3_protocol:    "https",
+                      bucket:         ENV['S3_BUCKET'],
+                      url:            ":s3_domain_url",
+                      path:           "/:class/:id/:style/:basename.:extension",
+                      default_url:    "/:class/:id/:style/:basename.:extension"
+
     validates_attachment :attachment,
       :presence => true,
       :content_type => { :content_type => %w(image/jpeg image/jpg image/png image/gif) }
