@@ -15,6 +15,8 @@ module Spree
 
     has_and_belongs_to_many :promotion_rules, class_name: 'Spree::Promotion::Rules::Store', join_table: 'spree_promotion_rules_stores', association_foreign_key: 'promotion_rule_id'
 
+    has_and_belongs_to_many :slides, join_table: 'spree_slides_stores'
+
     has_one :logo, -> { order(:position) }, as: :viewable, dependent: :destroy, class_name: "Spree::StoreLogo"
 
     accepts_nested_attributes_for :logo
